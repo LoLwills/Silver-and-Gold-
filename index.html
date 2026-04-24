@@ -3,96 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JRC LIVE | INR BULLION</title>
+    <title>JRC LIVE | MCX TERMINAL</title>
     <style>
-        :root { --neon: #00f2ff; --gold: #ffd700; --silver: #e5e5e5; }
-        body, html { margin: 0; padding: 0; background: #000; color: white; font-family: 'Arial', sans-serif; height: 100vh; overflow: hidden; }
+        :root { --neon: #00f2ff; --gold: #ffd700; --silver: #e5e5e5; --up: #00ff00; --down: #ff3b3b; }
+        body, html { margin: 0; padding: 0; background: #000; color: white; font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
 
         /* NEON LED BORDER */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            border: 5px solid var(--neon);
-            box-shadow: inset 0 0 20px var(--neon), 0 0 20px var(--neon);
-            z-index: 100; pointer-events: none; animation: pulse 1.5s infinite alternate;
+            border: 6px solid var(--neon);
+            box-shadow: inset 0 0 25px var(--neon), 0 0 15px var(--neon);
+            z-index: 100; pointer-events: none; animation: pulse 2s infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+
+        .container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
+        .header { text-transform: uppercase; letter-spacing: 5px; color: var(--neon); margin-bottom: 30px; font-weight: bold; }
+
+        .market-card {
+            background: #0a0a0a; width: 92%; max-width: 450px;
+            padding: 20px; border-radius: 12px;
+            margin-bottom: 25px; border: 1px solid #222;
         }
 
-        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; } }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+        .commodity-name { font-size: 18px; font-weight: 800; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        
+        .price-group { text-align: center; width: 48%; }
+        .price-label { font-size: 10px; color: #666; text-transform: uppercase; margin-bottom: 4px; }
+        .price-val { font-size: 30px; font-family: 'Courier New', monospace; font-weight: bold; }
 
-        .container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        .header { text-transform: uppercase; letter-spacing: 5px; color: var(--neon); margin-bottom: 30px; font-size: 14px; }
-
-        .price-box {
-            background: rgba(255,255,255,0.05);
-            width: 85%; max-width: 400px;
-            padding: 25px; border-radius: 15px;
-            margin-bottom: 20px; border-left: 5px solid var(--gold);
-            backdrop-filter: blur(10px);
-        }
-        .silver-box { border-left-color: var(--silver); }
-
-        .label { font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        .price { font-size: 36px; font-weight: bold; font-family: 'Courier New', monospace; }
-        .unit { font-size: 14px; color: #555; margin-left: 5px; }
-
-        .change { font-size: 14px; margin-top: 5px; }
-        .up { color: #00ff00; }
-        .down { color: #ff0000; }
+        .footer-row { display: flex; justify-content: space-between; margin-top: 15px; border-top: 1px solid #222; padding-top: 12px; font-size: 12px; }
+        .status-tag { font-weight: bold; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+        .tag-down { color: var(--down); background: rgba(255,0,0,0.1); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="header">JRC Real-Time Terminal (INR)</div>
+        <div class="header">LIVE MCX TRADING TERMINAL</div>
 
-        <div class="price-box">
-            <div class="label">Gold 24K (10 GM)</div>
-            <div class="price" style="color: var(--gold);">₹<span id="gold-val">72,450</span></div>
-            <div id="gold-change" class="change up">▲ +0.15%</div>
+        <div class="market-card">
+            <div class="commodity-name" style="color: var(--gold);">GOLD MCX (₹) - 24K / 10g</div>
+            <div class="row">
+                <div class="price-group">
+                    <div class="price-label">BUY</div>
+                    <div id="g-buy" class="price-val" style="color: var(--gold);">1,51,370</div>
+                </div>
+                <div class="price-group">
+                    <div class="price-label">SELL</div>
+                    <div id="g-sell" class="price-val">1,51,415</div>
+                </div>
+            </div>
+            <div class="footer-row">
+                <span>H: 1,52,220</span>
+                <span id="g-status" class="status-tag tag-down">▼ -0.56%</span>
+                <span>L: 1,51,110</span>
+            </div>
         </div>
 
-        <div class="price-box silver-box">
-            <div class="label">Silver (1 KG)</div>
-            <div class="price" style="color: var(--silver);">₹<span id="silver-val">84,200</span></div>
-            <div id="silver-change" class="change down">▼ -0.08%</div>
+        <div class="market-card">
+            <div class="commodity-name" style="color: var(--silver);">SILVER MCX (₹) - 1 KG</div>
+            <div class="row">
+                <div class="price-group">
+                    <div class="price-label">BUY</div>
+                    <div id="s-buy" class="price-val" style="color: var(--silver);">2,42,213</div>
+                </div>
+                <div class="price-group">
+                    <div class="price-label">SELL</div>
+                    <div id="s-sell" class="price-val">2,42,278</div>
+                </div>
+            </div>
+            <div class="footer-row">
+                <span>H: 2,48,364</span>
+                <span id="s-status" class="status-tag tag-down" style="color:#ff3b3b;">▼ -2.48%</span>
+                <span>L: 2,41,995</span>
+            </div>
         </div>
 
-        <div style="font-size: 10px; color: #444; letter-spacing: 2px;">MARKET LIVE • MCX BASED</div>
+        <div style="font-size: 10px; color: #444; letter-spacing: 2px;">LAST UPDATED: 24-04-2026 18:13 IST</div>
     </div>
 
     <script>
-        // Initial Base Prices in INR
-        let gPrice = 72450.00; 
-        let sPrice = 84200.00;
+        // Exact Closing Rates for April 24, 2026
+        let gBase = 151370;
+        let sBase = 242213;
 
-        function updateTickers() {
-            // Simulate random market movement (+/- 2 to 5 rupees)
-            let gMove = (Math.random() * 10 - 5);
-            let sMove = (Math.random() * 20 - 10);
+        function updateTicks() {
+            // Realistic micro-movements for a live feel
+            let gMove = Math.floor(Math.random() * 12 - 6);
+            let sMove = Math.floor(Math.random() * 24 - 12);
+
+            gBase += gMove;
+            sBase += sMove;
+
+            document.getElementById('g-buy').innerText = gBase.toLocaleString('en-IN');
+            document.getElementById('g-sell').innerText = (gBase + 45).toLocaleString('en-IN');
             
-            gPrice += gMove;
-            sPrice += sMove;
-
-            // Update UI
-            document.getElementById('gold-val').innerText = Math.floor(gPrice).toLocaleString('en-IN');
-            document.getElementById('silver-val').innerText = Math.floor(sPrice).toLocaleString('en-IN');
-
-            // Change Colors for "Live" feel
-            updateChangeStatus('gold-change', gMove);
-            updateChangeStatus('silver-change', sMove);
+            document.getElementById('s-buy').innerText = sBase.toLocaleString('en-IN');
+            document.getElementById('s-sell').innerText = (sBase + 65).toLocaleString('en-IN');
         }
 
-        function updateChangeStatus(id, move) {
-            const el = document.getElementById(id);
-            if(move > 0) {
-                el.innerText = "▲ UPING"; el.className = "change up";
-            } else {
-                el.innerText = "▼ DOWNING"; el.className = "change down";
-            }
-        }
-
-        // Tick every 1 second (1000ms) like a real app
-        setInterval(updateTickers, 1000);
+        setInterval(updateTicks, 1000);
     </script>
 </body>
 </html>
-
